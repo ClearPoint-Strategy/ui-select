@@ -335,12 +335,40 @@ uis.directive('uiSelect',
                 var scrollTop = $document[0].documentElement.scrollTop || $document[0].body.scrollTop; //To make it cross browser (blink, webkit, IE, Firefox).
 
                 // Determine if the direction of the dropdown needs to be changed.
-                if (offset.top + offset.height + offsetDropdown.height > scrollTop + $document[0].documentElement.clientHeight) {
-                  //Go UP
+                var parents = angular.element(element).parents('.modal-dialog .ibox-content');
+
+                var parent = undefined;
+                if(parents && parents.length > 1){
+                  parent = parents[1];
+                }
+                if(parents && parents.length == 1){
+                  parent = parents[0];
+                }
+                var boundingSize;
+
+                if(parent){
+                  var parentOffset = uisOffset([parent]);
+                  boundingSize = parentOffset.top + parentOffset.height
+                } else {
+                  boundingSize = scrollTop + $document[0].documentElement.clientHeight - 39;
+                }
+
+                if (parent && (offset.top + offset.height + offsetDropdown.height) > boundingSize) {
+                  //Go UP, but if by going up you go past the bounding box, we reduce the height and top offset for the dropdown
+                  var parentOffset = uisOffset([parent]);
+                  var availableSpaceForDropdown = offset.top - parentOffset.top;
+                  if(offsetDropdown.height > availableSpaceForDropdown){
+                    offsetDropdown.height = availableSpaceForDropdown - 10;
+                    dropdown[0].style.height = offsetDropdown.height + 'px';
+                  }
                   setDropdownPosUp(offset, offsetDropdown);
                 }else{
-                  //Go DOWN
-                  setDropdownPosDown(offset, offsetDropdown);
+                  if((offset.top + offset.height + offsetDropdown.height) > boundingSize){
+                    setDropdownPosUp(offset, offsetDropdown);
+                  } else {
+                    //Go DOWN
+                    setDropdownPosDown(offset, offsetDropdown);
+                  }
                 }
 
               }
