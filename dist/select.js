@@ -1,7 +1,7 @@
 /*!
  * ui-select
  * http://github.com/angular-ui/ui-select
- * Version: 0.14.8 - 2016-07-19T17:46:30.141Z
+ * Version: 0.14.8 - 2016-07-19T17:50:27.590Z
  * License: MIT
  */
 
@@ -750,10 +750,10 @@ uis.controller('uiSelectCtrl',
 
     var key = e.which;
 
-    // if(~[KEY.ESC,KEY.TAB].indexOf(key)){
-    //   //TODO: SEGURO?
-    //   ctrl.close();
-    // }
+    if (~[KEY.ENTER,KEY.ESC].indexOf(key)){
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     $scope.$apply(function() {
 
@@ -1312,6 +1312,9 @@ uis.directive('uiSelectMultiple', ['uiSelectMinErr','$timeout', function(uiSelec
       var ctrl = this,
           $select = $scope.$select,
           ngModel;
+
+      if (angular.isUndefined($select.selected))
+        $select.selected = [];
 
       //Wait for link fn to inject it 
       $scope.$evalAsync(function(){ ngModel = $scope.ngModel; });
