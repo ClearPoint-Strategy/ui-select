@@ -337,7 +337,7 @@ uis.directive('uiSelect',
                 // Determine if the direction of the dropdown needs to be changed.
                 var parents = angular.element(element).parents('.modal-dialog .ibox-content');
 
-                var parent = undefined;
+                var parent;
                 if(parents && parents.length > 1){
                   parent = parents[1];
                 }
@@ -347,8 +347,8 @@ uis.directive('uiSelect',
                 var boundingSize;
 
                 if(parent){
-                  var parentOffset = uisOffset([parent]);
-                  boundingSize = parentOffset.top + parentOffset.height
+                  var pOffset = uisOffset([parent]);
+                  boundingSize = pOffset.top + pOffset.height;
                 } else {
                   boundingSize = scrollTop + $document[0].documentElement.clientHeight - 39;
                 }
